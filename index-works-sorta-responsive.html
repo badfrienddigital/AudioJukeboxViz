@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <title>
+      MNML
+    </title>
+    <meta name="author" content="mrmrs">
+    <meta name="description" content="minimal template to building responsive websites with html5 and postcss">
+    <script src="https://code.jquery.com/jquery-3.0.0.min.js"></script>
+    <link rel="stylesheet" href="node_modules/tachyons/css/tachyons.min.css"></link>
+    <link rel="stylesheet" href="dez/btns-master/css/btns.min.css"></link>
+    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/mnml.min.css">
+    <style type="text/css">
+    body {
+    background-color: #f4f4f4;
+}
+.svg-container {
+	display: inline-block;
+	position: relative;
+	width: 100%;
+	vertical-align: middle;
+	overflow: hidden;
+}
+
+.svg-content-responsive {
+    display: inline-block;
+    position: absolute;
+    top: 10px;
+    left: 0;
+}
+
+    .selected {
+        font-weight: bold
+    }
+</style>
+
+  </head>
+
+
+
+
+
+
+
+  <body onload="shuffleList()">
+
+
+    <button class="btn" id="stop">PAUSE</button>
+    <p>select song</p>
+
+    <audio id="player"></audio>
+
+   <ul id="playlist" class="list pl0">
+       <li data-mp3="aud/exeunt-no1.mp3">EXXXX</li>
+       <li data-mp3="aud/drunkensufis-vvv.mp3">SOOOF</li>
+   </ul>
+
+
+<script type="text/javascript">
+function shuffleList() {
+    var origList = $("#playlist li").detach();
+    var newList = origList.clone();
+    for (var i = 0; i < newList.length; i++) {
+        //select a random index; the number range will decrease by 1 on each iteration
+        var randomIndex = randomInt(newList.length - i);
+        //place the randomly-chosen element into our copy and remove from the original:
+        newList[i] = origList.splice(randomIndex, 1);
+        //place the element back into into the HTML
+        $("#playlist").append(newList[i]);
+    }
+}
+function randomInt(maxNum) { //returns a random integer from 0 to maxNum-1
+    return Math.floor(Math.random() * maxNum);
+}
+</script>
+
+
+<script>
+// globals
+var _player = document.getElementById("player"),
+    _playlist = document.getElementById("playlist"),
+    _stop = document.getElementById("stop");
+// functions
+function playlistItemClick(clickedElement) {
+    var selected = _playlist.querySelector(".selected");
+    if (selected) {
+        selected.classList.remove("selected");
+    }
+    clickedElement.classList.add("selected");
+
+    _player.src = clickedElement.getAttribute("data-mp3");
+    _player.play();
+}
+function playNext() {
+    var selected = _playlist.querySelector("li.selected");
+    if (selected && selected.nextSibling) {
+        playlistItemClick(selected.nextSibling);
+    }
+}
+// event listeners
+_stop.addEventListener("click", function () {
+  _player.pause();}
+);
+_player.addEventListener("ended", playNext);
+_playlist.addEventListener("click", function (e) {
+    if (e.target && e.target.nodeName === "LI") {
+        playlistItemClick(e.target);
+    }
+});
+</script>
+
+
+<div class="chart">
+</div>
+
+<div class="svg-container">
+<script>
+
+$(document).ready(function () {
+var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+var audioElement = document.getElementById("player");
+var audioSrc = audioCtx.createMediaElementSource(audioElement);
+var analyser = audioCtx.createAnalyser();
+
+// Bind our analyser to the media element source.
+audioSrc.connect(analyser);
+audioSrc.connect(audioCtx.destination);
+
+//var frequencyData = new Uint8Array(analyser.frequencyBinCount);
+var frequencyData = new Uint8Array(200);
+
+var svgHeight = '300';
+var svgWidth = window.innerWidth;
+var barPadding = '1';
+
+function createSvg(parent, height, width) {
+  return d3.select(parent).append('svg').attr('height', height).attr('width', width);
+}
+
+var svg = createSvg('body', svgHeight, svgWidth);
+
+// Create our initial D3 chart.
+svg.selectAll('rect')
+   .data(frequencyData)
+   .enter()
+   .append('rect')
+   .attr('x', function (d, i) {
+      return i * (svgWidth / frequencyData.length);
+   })
+   .attr('width', svgWidth / frequencyData.length - barPadding);
+
+// Continuously loop and update chart with frequency data.
+function renderChart() {
+   requestAnimationFrame(renderChart);
+
+   // Copy frequency data to frequencyData array.
+   analyser.getByteFrequencyData(frequencyData);
+   // Update d3 chart with new data.
+   svg.selectAll('rect')
+      .data(frequencyData)
+      .attr('y', function(d) {
+         return svgHeight - d;
+      })
+      .attr('height', function(d) {
+         return d;
+      })
+      .attr('fill', function(d) {
+         return 'rgb(0, 0, ' + d + ')';
+      });
+}
+
+// Run the loop
+renderChart();
+
+});
+
+</script>
+</div>
+
+
+  </body>
+</html>

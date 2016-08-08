@@ -1,0 +1,44 @@
+{
+  "name": "waveform-util",
+  "description": "Generate peak arrays for rendering waveforms in client-side canvas elements",
+  "version": "0.0.1",
+  "author": {
+    "name": "Justin Marrington",
+    "url": "@howlingeverett"
+  },
+  "main": "lib/waveform",
+  "dependencies": {
+    "pcm": ">=1.0.2",
+    "node-ffprobe": "~1.2"
+  },
+  "devDependencies": {
+    "coffee-script": "~1.6",
+    "mocha": ">=1.8",
+    "chai": ">=1.5"
+  },
+  "scripts": {
+    "prepublish": "cake build"
+  },
+  "readme": "# Waveform Utils\n\nThis is a tiny wrapper around ffprobe and pcm.js to do some handy things with waveforms, particularly if you plan on rendering them in-browser (and can't depend on the WebAudio API being present).\n\nI built this because I needed a way to generate representative peak arrays of arbitrary widths for audio files, to be later rendered into a client-side `<canvas>` element.\n\n## Installing\nGrab it via npm:\n\n`npm install waveform-util`\n\nNote that since pcm.js depends on ffmpeg and ffprobe.js on ffprobe, you'll need to have these installed on your system. If you're on OS X, like I am:\n\n`brew install ffprobe ffmpeg`\n\n## Examples\n\nCurrently there are methods for generating peak arrays of various sizes (no JSON stream support yet, send ye your pull requests), and for parsing useful audio data out of audio files. \n\n```\nwaveform = require('waveform-util')\n\n// Generate peaks from a given audio file path. All parameters are required:\n// waveform.generate_peaks(audio_path, target_width, duration, bit_rate, channels, callback);\n// Parameters:\n//   - audio_path: relative or absolute path to an audio file of *nearly* any type*\n//   - target_width: how many entries you want in the output peaks array.\n//\t\t     This is useful, for example, if you want to draw a\n//\t\t     200px-wide waveform: each peak becomes a line 1px wide.\n//   - duration: Duration of the audio in (fractional) seconds\n//   - bit_rate: Bit rate of the audio file\n//   - channels: Number of channels in the audio (e.g. 1 for mono, 2 for stereo)\n//   - callback: callback function with `err` and `peaks_obj` as parameters\n//\n// The peaks_obj parameter in the callback will be an object with the format\n// { peaks: [], max_peak: Number }\nwaveform.generate_peaks('test.m4a', 200, 31.05, 44100, 2, \n  function (err, peaks_obj) {\n    console.log(peaks_obj.peaks) // Array of peak values e.g. [0.75, 0.2, 0.1111,...]\n    console.log(peaks_obj.max_peak) // Max peak in the signal: useful for scaling the peak values when drawing them\n  }\n)\n```\n\n",
+  "readmeFilename": "README.md",
+  "_id": "waveform-util@0.0.1",
+  "dist": {
+    "shasum": "c078f1b0b3e8223bf5c09efc1d6d91fd4f9138fe",
+    "tarball": "https://registry.npmjs.org/waveform-util/-/waveform-util-0.0.1.tgz"
+  },
+  "_from": "waveform-util@latest",
+  "_npmVersion": "1.2.14",
+  "_npmUser": {
+    "name": "howlingeverett",
+    "email": "justin@marrington.net"
+  },
+  "maintainers": [
+    {
+      "name": "howlingeverett",
+      "email": "justin@marrington.net"
+    }
+  ],
+  "directories": {},
+  "_shasum": "c078f1b0b3e8223bf5c09efc1d6d91fd4f9138fe",
+  "_resolved": "https://registry.npmjs.org/waveform-util/-/waveform-util-0.0.1.tgz"
+}

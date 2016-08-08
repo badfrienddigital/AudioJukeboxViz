@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <title>
+      MNML
+    </title>
+    <meta name="author" content="mrmrs">
+    <meta name="description" content="minimal template to building responsive websites with html5 and postcss">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/mnml.min.css">
+    <script src="https://code.jquery.com/jquery-3.0.0.min.js"></script>
+    <script src="buzz.js"></script>
+    <style type="text/css">
+    #playlist,audioarea{background:#666;width:400px;padding:20px;}
+.active li{color:#5DB0E6;text-decoration:none;}
+#playlist li{
+    cursor:pointer;
+    padding:8px;
+}
+#playlist li:hover{
+    color:blue;
+}
+</style>
+
+
+  </head>
+  <body onload="shuffleList(); loadlist()">
+    <audio id="audioarea" preload="auto" tabindex="0" controls="" type="audio/mpeg">
+       Sorry, your browser does not support HTML5 audio.
+   </audio>
+   <ul id="playlist">
+       <li><source src="http://www.archive.org/download/MoonlightSonata_755/Beethoven-MoonlightSonata.mp3">Moonlight Sonata - Beethoven</li>
+       <li><source id="XXX" src="aud/exeunt-no1.mp3" type="audio/mpeg">EXXXX</li>
+       <li><source src="aud/drunkensufis-vvv.mp3" type="audio/mpeg">SOOF</li>
+   </ul>
+
+
+<script> // BUZZ JS
+
+
+
+
+
+
+</script>
+
+
+
+
+
+
+
+<script type="text/javascript">
+function shuffleList() {
+    var origList = $("#playlist li").detach();
+    var newList = origList.clone();
+
+    for (var i = 0; i < newList.length; i++) {
+        //select a random index; the number range will decrease by 1 on each iteration
+        var randomIndex = randomInt(newList.length - i);
+
+        //place the randomly-chosen element into our copy and remove from the original:
+        newList[i] = origList.splice(randomIndex, 1);
+
+        //place the element back into into the HTML
+        $("#playlist").append(newList[i]);
+    }
+}
+function randomInt(maxNum) { //returns a random integer from 0 to maxNum-1
+    return Math.floor(Math.random() * maxNum);
+
+
+
+}
+</script>
+
+
+
+<script type="text/javascript">
+
+function loadlist(){
+var song = $("#XXX");
+song.play();
+}
+
+</script>
+
+
+
+<script>
+
+function loadlist2(){
+    var audio = $("#audioarea");
+    var playlist = $("#playlist");
+    var tracks = $("#playlist li");
+    audio.volume = .10;
+
+    tracks.addEventListener("click", runny());
+
+
+    tracks.addEventListener("ended",function(e){
+        current++;
+        if(current == len){
+            current = 0;
+            link = playlist.find("source")[0];
+        }else{
+            link = playlist.find("source")[current];
+        }
+        run($(link),audio[0]);
+    });
+},
+
+
+
+function runny(){
+  audio.load();
+  audio.play();
+
+}
+
+
+
+function run(link, player){
+        player.src = link.attr("src");
+        par = link.parent();
+        par.addClass("active").siblings().removeClass("active");
+        audio[0].load();
+        audio[0].play();
+}
+
+
+</script>
+
+    <div style="display:table;width:100%; height: 100%;">
+      <div class="display:table-cell;vertical-align:middle;">
+        <h1>MNML</h1>
+        <h2>yessir</h2>
+      </div>
+    </div>
+    <footer>
+      This is footer content!!!
+    </footer>
+  </body>
+</html>
